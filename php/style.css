@@ -1,0 +1,114 @@
+*{
+    color: #8c8c8c;
+    font-family: 'Poppins', sans-serif;
+    letter-spacing: normal;
+    word-spacing: normal;
+    line-height: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    text-align: start;
+    appearance: auto;
+}
+
+.story_card {
+    font-family: "Poppins" sans-serif;
+    background: transparent;
+    margin: 0 auto;
+    max-width: 950px;
+    padding: 75px 0;
+    position: relative;
+    text-align: center;
+    align-items: center;
+    width: 100%;
+    z-index: 1;
+}
+.search_btn_content{
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    min-height: 40px;
+    align-items: center;
+    display: inline-flex;
+    flex-direction: row;
+    line-height: normal;
+    margin: .25em auto;
+    padding: 0 1em;
+    width: auto;
+    background-color: #e50914;
+    background-image: linear-gradient(180deg,#e50914,#db0510);
+    box-shadow: 0 1px 0 rgba(0,0,0,.45);
+    color: #fff;
+    cursor: pointer;
+    opacity: 0.8;s
+    
+    }
+.search_btn_content:hover{
+        opacity: 1;
+        background-color: #db0510;
+}
+.search_box{
+    font-family: 'Poppins', sans-serif;
+        height: 48px;
+        padding: 10px 10px 0;
+        width: 100%;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border: 1px solid #8c8c8c;
+        border-radius: 2px;
+        box-sizing: border-box;
+        color: #000;
+        display: block;
+        font-size: 16px;
+        writing-mode: horizontal !important;
+        text-rendering: auto;
+        color: fieldtext;
+        letter-spacing: normal;
+        word-spacing: normal;
+        line-height: normal;
+        text-transform: none;
+        text-indent: 0px;
+        text-shadow: none;
+        display: inline-block;
+        text-align: start;
+        appearance: auto;
+        -webkit-rtl-ordering: logical;
+        cursor: text;
+        background-color: field;
+        margin: 0em;
+        border-width: 2px;
+        border-style: inset;
+        border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+        border-image: initial;
+        box-shadow: none;
+        line-height: normal;
+}
+.search_box:hover{
+    border-color: #db0510;
+}
+.background{
+
+    background: rgba(0,0,0,.4);
+    background-image: linear-gradient(0deg,rgba(0,0,0,.8) 0,transparent 60%,rgba(0,0,0,.8));
+    background: rgba(0,0,0,.5);
+    background-image: linear-gradient(0deg,transparent 50%,rgba(0,0,0,.7)),radial-gradient(50% 100%,transparent 0,rgba(0,0,0,.7) 100%);
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: block;
+}
+.h1{
+  
+    -webkit-rtl-ordering: logical;
+    cursor: text;
+}
+.not_a_member?:hover{
+    opacity: 0.8;
+
+}
+    
+
+
+    
