@@ -357,8 +357,8 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !==true)
         <div class="box-container container">
         <div class="box">
           <h3>premium plan</h3>
-          <div class="price"><span>Rs</span>2500<span>/mo</span></div>
-          <a href="#" class="link-btn">choose the plan</a>
+         
+          <a href="#" class="link-btn">Activate</a>
           <div class="list">
             <p><i class="fas fa-check"></i> personal training</p>
             <p><i class="fas fa-check"></i> classes per week</p>
@@ -375,8 +375,8 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !==true)
         <div class="box-container container">
         <div class="box">
           <h3>ultimate plan</h3>
-          <div class="price"><span>Rs</span>3500<span>/mo</span></div>
-          <a href="#" class="link-btn">choose the plan</a>
+          
+          <a href="#" class="link-btn">Activate</a>
           <div class="list">
             <p><i class="fas fa-check"></i> personal training</p>
             <p><i class="fas fa-check"></i> classes per week</p>
