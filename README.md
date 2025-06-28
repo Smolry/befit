@@ -78,7 +78,7 @@ Frontend + Backend Development, UI/UX, Deployment
 
 🖼️ Live Demo (if you want to share)
 
-(https://befit.infinityfreeapp.com)
+[befit](https://befit.infinityfreeapp.com)
 
 
 
