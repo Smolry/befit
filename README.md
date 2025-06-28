@@ -77,8 +77,8 @@ Deployed & tested on: InfinityFree Hosting
 Frontend + Backend Development, UI/UX, Deployment
 
 🖼️ Live Demo (if you want to share)
-``bash
-https://befit.infinityfreeapp.com
+
+(https://befit.infinityfreeapp.com)
 
 
 
