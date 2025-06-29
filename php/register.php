@@ -1,31 +1,40 @@
 <?php
-$showAlert = false;
-$showError = false;
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-    include 'dbconn.php';
-    $username = $_POST["username"];
-    $password = $_POST["password"];
-    $cpassword = $_POST["cpassword"];
-    $exists=false;
-    // Check if username is empty
-    if(empty(trim($username))or empty($password)){
-        $showError=true;
+include("dbconn.php");
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Sanitize input
+    $username = trim($_POST['username']);
+    $password = $_POST['password'];
+
+    // Validate input
+    if (empty($username) || empty($password)) {
+        die("Username and password cannot be empty.");
     }
-    if((trim($password) == trim($cpassword)) && $exists==false){
-        $sql = "INSERT INTO `users`( `username`, `password`, `created_at`) VALUES ('$username', '$password', current_timestamp())";
-        $result = mysqli_query($conn, $sql);
-        if ($result){
-            $showAlert = true;
-            header("location: login.php");
-            exit;
-        }
+
+    // Hash the password
+    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
+    // Prepare statement to prevent SQL injection
+    $stmt = $conn->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
+    if ($stmt === false) {
+        die("Prepare failed: " . $conn->error);
     }
-    else{
-        $showError = "Passwords do not match";
+
+    $stmt->bind_param("ss", $username, $hashedPassword);
+
+    if ($stmt->execute()) {
+        // Redirect without output before
+        header("Location: home.php");
+        exit();
+    } else {
+        echo "Error: " . $stmt->error;
     }
+
+    $stmt->close();
+    $conn->close();
 }
-    
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
