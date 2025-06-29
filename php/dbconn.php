@@ -1,19 +1,19 @@
 <?php
-/*
-This file contains database configuration assuming you are running mysql using user "root" and password ""
-*/
+$servername = "servername";
+$username = "username";
+$password = "password";
+$database = "db_name";
 
-define('DB_SERVER', 'sql12.freesqldatabase.com');
-define('DB_USERNAME', 'sql12622045');
-define('DB_PASSWORD', 'lEKdX2SanT');
-define('DB_NAME', 'sql12622045');
+// Create connection
+$conn = new mysqli($servername, $username, $password, $database);
 
-// Try connecting to the Database
-$conn = mysqli_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
+// Set UTF-8 charset
+$conn->set_charset("utf8mb4");
 
-//Check the connection
-if($conn == false){
-    die('Error: Cannot connect'.mysqli_connect_error());
+// Check connection
+if ($conn->connect_error) {
+    // Log error (for dev environment only)
+    error_log("Connection failed: " . $conn->connect_error);
+    die("Oops! We are facing technical issues. Please try again later.");
 }
-
 ?>
