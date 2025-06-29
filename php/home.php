@@ -1,16 +1,45 @@
 <?php
-include "dbconn.php" ;
 session_start();
+require_once 'dbconn.php';
 
-if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !==true)
-{
-    header("location: login.php");
-    exit;
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
 }
 
+$username = $_SESSION['username'];
+$plan = "Not Selected";
+$successMessage = "";
 
+// Handle plan update
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['new_plan'])) {
+    $newPlan = trim($_POST['new_plan']);
 
+    // Optional: validate against allowed plans
+    $allowedPlans = ['Basic', 'Premium', 'Pro'];
+    if (in_array($newPlan, $allowedPlans)) {
+        $stmt = $conn->prepare("UPDATE users SET plan = ? WHERE username = ?");
+        $stmt->bind_param("ss", $newPlan, $username);
+        if ($stmt->execute()) {
+            $successMessage = "Plan updated successfully!";
+            $plan = $newPlan; // update local value too
+        }
+        $stmt->close();
+    }
+}
+
+// Fetch current plan
+$stmt = $conn->prepare("SELECT plan FROM users WHERE username = ?");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$stmt->bind_result($fetchedPlan);
+if ($stmt->fetch() && !empty($fetchedPlan)) {
+    $plan = $fetchedPlan;
+}
+$stmt->close();
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -62,21 +91,40 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !==true)
     <!-- header section ends -->
 
     <!-- home section starts  -->
-
     <section class="home" id="home">
-      <div class="container">
-        <div class="row align-items-center min-vh-100">
-          <div class="col-md-6">
-            <img src="images/home-img.png" class="w-100" alt="" />
-          </div>
-
-          <div class="col-md-6 text-center text-md-left">
-            <span>back to the gym</span>
-            <h3>start your fitness journey today</h3>
-          </div>
+  <div class="container">
+    <div class="row align-items-center min-vh-100">
+      <div class="col-md-6">
+        <img src="images/home-img.png" class="w-100" alt="" />
+      </div>
+      <div class="col-md-6 text-center text-md-left">
+        <span>back to the gym</span>
+        <h3>start your fitness journey today</h3>
+        <div class="story_card" style="background:rgba(255,255,255,0.05);padding:2rem;border-radius:1rem;margin-top:2rem;">
+          <h1 class="h1">Welcome, <?php echo htmlspecialchars($username); ?>!</h1>
+          <p>Your current plan: <strong><?php echo htmlspecialchars($plan); ?></strong></p>
+          <p>Change your membership plan:</p>
+          <form method="post">
+            <select name="new_plan" class="search_box" required>
+              <option value="">-- Select Plan --</option>
+              <option value="Basic" <?php if ($plan == 'Basic') echo 'selected'; ?>>Basic</option>
+              <option value="Premium" <?php if ($plan == 'Premium') echo 'selected'; ?>>Premium</option>
+              <option value="Pro" <?php if ($plan == 'Pro') echo 'selected'; ?>>Pro</option>
+            </select>
+            <br><br>
+            <button type="submit" class="search_btn_content">Update Plan</button>
+          </form>
+          <?php if (!empty($successMessage)) : ?>
+            <p class="success-message"><?php echo htmlspecialchars($successMessage); ?></p>
+          <?php endif; ?>
+          <form method="post" action="logout.php">
+            <button class="search_btn_content" type="submit">Logout</button>
+          </form>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
     <!-- home section ends -->
 
@@ -357,8 +405,8 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !==true)
         <div class="box-container container">
         <div class="box">
           <h3>premium plan</h3>
-         
-          <a href="#" class="link-btn">Activate</a>
+          <div class="price"><span>Rs</span>2500<span>/mo</span></div>
+          <a href="#" class="link-btn">choose the plan</a>
           <div class="list">
             <p><i class="fas fa-check"></i> personal training</p>
             <p><i class="fas fa-check"></i> classes per week</p>
@@ -375,8 +423,8 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !==true)
         <div class="box-container container">
         <div class="box">
           <h3>ultimate plan</h3>
-          
-          <a href="#" class="link-btn">Activate</a>
+          <div class="price"><span>Rs</span>3500<span>/mo</span></div>
+          <a href="#" class="link-btn">choose the plan</a>
           <div class="list">
             <p><i class="fas fa-check"></i> personal training</p>
             <p><i class="fas fa-check"></i> classes per week</p>
@@ -429,50 +477,50 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !==true)
 
       <div class="box-container container">
         <div class="box">
-          <img src="images/aniket.jpeg" alt="" />
+          <img src="images/Trainer1.jpg" alt="" />
           <div class="content">
             <span>gym trainer</span>
-            <h3>Aniket Behera</h3>
+            <h3>Sonam</h3>
           </div>
           <div class="share">
             <a href="#" class="fab fa-facebook-f"></a>
             <a href="#" class="fab fa-twitter"></a>
             <a
-              href="https://www.instagram.com/aniket.behera_/"
+              href="#"
               class="fab fa-instagram"
             ></a>
             <a
-              href="https://www.linkedin.com/in/aniket-behera-6a1192231"
+              href="#"
               class="fab fa-linkedin"
             ></a>
           </div>
         </div>
 
         <div class="box">
-          <img src="images/omkar.jpeg" alt="" />
+          <img src="images/trainer2.jpg" alt="" />
           <div class="content">
             <span>gym trainer</span>
-            <h3>Omkar satav</h3>
+            <h3>Sunil</h3>
           </div>
           <div class="share">
             <a href="#" class="fab fa-facebook-f"></a>
             <a href="#" class="fab fa-twitter"></a>
             <a
-              href="https://www.instagram.com/omkarrx_07/"
+              href="#"
               class="fab fa-instagram"
             ></a>
             <a
               href="#"
-              class="https://www.linkedin.com/in/omkar-satav-751118232"
+              class="fab fa-linkedin"
             ></a>
           </div>
         </div>
 
         <div class="box">
-          <img src="images/vidya.jpeg" alt="" />
+          <img src="images/trainer3.jpg" alt="" />
           <div class="content">
             <span>gym trainer</span>
-            <h3>Vidya Goykar</h3>
+            <h3>Prashant</h3>
           </div>
           <div class="share">
             <a href="#" class="fab fa-facebook-f"></a>
@@ -560,12 +608,12 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !==true)
 
         <div class="box">
           <h3>contact info</h3>
-          <a href="tel:9860556943"> <i class="fas fa-phone"></i> 9860556943 </a>
-          <a href="tel:9921155730"> <i class="fas fa-phone"></i> 9921155730 </a>
-          <a href="mailto:shindedhanashreeraju@gmail.com">
-            <i class="fas fa-envelope"></i> shindedhanashreeraju@gmail.com
+          <a href="tel:XXXXXXXXXX"> <i class="fas fa-phone"></i> XXXXXXXXXX </a>
+          <a href="tel:XXXXXXXXXX"> <i class="fas fa-phone"></i> XXXXXXXXXX </a>
+          <a href="mailto:aniket.0301@gmail.com">
+            <i class="fas fa-envelope"></i> aniket.behera.0301@gmail.com
           </a>
-          <a href="#"> <i class="fas fa-map"></i> Pune, India - 411038 </a>
+          <a href="#"> <i class="fas fa-map"></i> Pune, India - 411011 </a>
         </div>
 
         <div class="box">
@@ -573,11 +621,11 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !==true)
           <a href="#"> <i class="fab fa-facebook-f"></i> facebook </a>
           <a href="#"> <i class="fab fa-twitter"></i> twitter </a>
           <a
-            href="https://instagram.com/d__________princess?igshid=OTk0YzhjMDVlZA=="
+            href="#"
           >
             <i class="fab fa-instagram"></i> instagram
           </a>
-          <a href="https://www.linkedin.com/in/dhanashree10949210">
+          <a href="#">
             <i class="fab fa-linkedin"></i> linkedin
           </a>
         </div>
