@@ -76,6 +76,12 @@ Welcome to **BeFit**, a responsive web-based gym membership management system. T
 Deployed & tested on: InfinityFree Hosting
 Frontend + Backend Development, UI/UX, Deployment
 
+## Testing
+
+for testing sql manually insert
+  ``bash
+  INSERT into `users` ("username", "BCRYPT_hashedpassword",NULL)
+
 🖼️ Live Demo (if you want to share)
 
 [befit](https://befit.infinityfreeapp.com)
