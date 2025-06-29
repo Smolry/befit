@@ -1,82 +1,76 @@
 <?php
-include 'dbconn.php';
-if($conn=true)
-{
-    echo "Connected successfully";
+/* --------  CONFIG & SESSION  -------- */
+require_once 'dbconn.php';          // your improved connector
+session_start();
 
+/* --------  HANDLE POST  -------- */
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // 1. sanitize
+    $username = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
 
-}
-$login = false;
-$showError = false;
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-    include 'dbconn.php';
-    $username = $_POST["username"];
-    $password = $_POST["password"]; 
-    
-     
-    $sql = "SELECT `username`, `password` FROM `users` WHERE username='$username' AND password='$password'";
-    $result = mysqli_query($conn, $sql);
-    $num = mysqli_num_rows($result);
-    if ($num == 1){
-        $login = true;
-        session_start();
-        $_SESSION['loggedin'] = true;
-        $_SESSION['username'] = $username;
-        header("location: home.php");
+    // 2. quick validation
+    if ($username === '' || $password === '') {
+        $error = 'Username and password are required.';       // shown later
+    } else {
+        // 3. prepared statement
+        $stmt = $conn->prepare('SELECT id, password FROM users WHERE username = ?');
+        if ($stmt) {
+            $stmt->bind_param('s', $username);
+            $stmt->execute();
+            $stmt->store_result();
 
-    } 
-    else{
-        $showError = "Invalid Credentials";
+            // 4. username found?
+            if ($stmt->num_rows === 1) {
+                $stmt->bind_result($uid, $hashedPwd);
+                $stmt->fetch();
+
+                // 5. verify hash
+                if (password_verify($password, $hashedPwd)) {
+                    /* ---- SUCCESS ---- */
+                    session_regenerate_id(true);              // session‑fixation defence
+                    $_SESSION['loggedin'] = true;
+                    $_SESSION['uid']      = $uid;
+                    $_SESSION['username'] = $username;
+                    header('Location: home.php');
+                    exit;
+                }
+            }
+            /* --- Either username not found or hash failed --- */
+            $error = 'Incorrect username or password.';
+        } else {
+            // dev‑time message only
+            error_log('Login prepare failed: ' . $conn->error);
+            $error = 'Server error. Try again later.';
+        }
     }
 }
-    
-
 ?>
-<!DOCTYPE html>
+<!-- ----------  SIMPLE FORM  ---------- -->
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="style.css" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="/personalization/cl2/freeform/WebsiteDetect?source=wwwhead&amp;fetchType=css&amp;modalView=nmLanding" data-uia="botLink">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
-    <title>Document</title>
+  <meta charset="utf-8">
+  <title>Login – BeFit</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="background">
-        <img scr="bg.png">
-    </div>
-    <div class="story_card">
-        <h1 class="h1">Login</h1>
-        
-       
-        <form method="post" class="search_form" >
-            <div class="search">
-                <ul>
-                    <li><h3 class="h2">Username</h3></li>
-                    <li>
-                        <input type="text"  class="search_box"name="username" placeholder="Enter username" value tabindex="0" maxlength="50" id="username" required></input>
-                    </li>
-                    <li>
-                        <h3 class="h3">Password</h3>
-                    </li>
-                    <li>
-                        <input type="password" class="search_box" name="password" placeholder="Enter password" value tabindex="0" maxlength="50" id="password" required></input>
-                    </li>
-                    <li><div class="search_btn_content">
-                        <span class="search_btn_content"><button type="submit">Submit</button></span>
-                        <i class="ri-send-plane-2-line"></i>
-                        </div>
-                    </li>
-                    <li><div class="not_a_member?">
-                        <h2 class="h2" ><a href="register.php">not a member?</a></h2>
-                    </div>
-                    </li>
-                </ul>
-                
-            </div>
-        </form>
-    </div>
+  <div class="story_card">
+    <h1 class="h1">Sign in</h1>
+
+    <?php if (isset($error)) echo "<p style='color:#e50914'>$error</p>"; ?>
+
+    <form method="post">
+      <input class="search_box" name="username" placeholder="Username" required>
+      <br><br>
+      <input type="password" class="search_box" name="password" placeholder="Password" required>
+      <br><br>
+      <button class="search_btn_content" type="submit">Log in</button>
+    </form>
+
+    <p style="margin-top:1rem;">No account?
+       <a href="register.php" class="search_btn_content" style="text-decoration:none;">Sign up →</a>
+    </p>
+  </div>
 </body>
 </html>
