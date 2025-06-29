@@ -39,9 +39,8 @@
     box-shadow: 0 1px 0 rgba(0,0,0,.45);
     color: #fff;
     cursor: pointer;
-    opacity: 0.8;s
-    
-    }
+    opacity: 0.8;
+}
 .search_btn_content:hover{
         opacity: 1;
         background-color: #db0510;
@@ -104,11 +103,10 @@
     -webkit-rtl-ordering: logical;
     cursor: text;
 }
-.not_a_member?:hover{
+.not_a_member:hover {
     opacity: 0.8;
-
 }
-    
 
 
-    
+
+
